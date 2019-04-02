@@ -1,6 +1,5 @@
 const fs = require('fs');
-const util = require('util')
-
+const util = require('util');
 fs.readFile('./Data/friend1k.json', 'utf-8', (err, data) => {
     if (err) throw err;
     const friends = parseFriends(data);
@@ -20,7 +19,7 @@ function parseFriends(data) {
     for(var i in friendData){
         const friend = { 
             first: friendData[i].name.split(" ")[0],
-            last: friendData[i].name.split(" ")[1]
+            last: friendData[i].name.split(" ")[friendData[i].name.split(" ").length -1]
         };
         friendArray[i] = friend;
     }
@@ -28,12 +27,15 @@ function parseFriends(data) {
 }
 
 function matchName(friend, matches, allFriends, layerNum) {
-    console.log(" - ".repeat(layerNum) + "Testing: ", friend.first, friend.last);
+    
     matches.push(friend);
     //console.log("Matches: ", matches)
     var result = allFriends.filter(candidate => {
         return candidate.first === friend.last && candidate !== friend && !matches.includes(candidate);
-    })
+    });
+    if(result.length >= 1){
+        console.log(" - ".repeat(layerNum) + "Testing: ", friend.first, friend.last);
+    }
     var chainList = [];
     for (var i in result) {
         console.log(" + ".repeat(layerNum+1) + "Matched:", result[i].first, result[i].last);
@@ -43,4 +45,8 @@ function matchName(friend, matches, allFriends, layerNum) {
         }
     }
     return chainList;
+}
+
+function parseList(matchList){
+    console.log("Parsing");
 }
