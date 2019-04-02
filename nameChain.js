@@ -6,7 +6,7 @@ fs.readFile('./Data/friend1k.json', 'utf-8', (err, data) => {
     const friends = parseFriends(data);
     for(var i in friends) {
         var matches = [];
-        var results = matchName(friends[i], matches, friends);
+        var results = matchName(friends[i], matches, friends, 0);
         if(results.length >= 2){
             //console.log(util.inspect(results, false, null, true))
         }
@@ -27,8 +27,8 @@ function parseFriends(data) {
     return friendArray;
 }
 
-function matchName(friend, matches, allFriends) {
-    console.log("Testing: ", friend.first, friend.last);
+function matchName(friend, matches, allFriends, layerNum) {
+    console.log(" - ".repeat(layerNum) + "Testing: ", friend.first, friend.last);
     matches.push(friend);
     //console.log("Matches: ", matches)
     var result = allFriends.filter(candidate => {
@@ -36,8 +36,8 @@ function matchName(friend, matches, allFriends) {
     })
     var chainList = [];
     for (var i in result) {
-        //console.log("Checking:", result[i]);
-        var newMatches = matchName(result[i], matches, allFriends);
+        console.log(" + ".repeat(layerNum+1) + "Matched:", result[i].first, result[i].last);
+        var newMatches = matchName(result[i], matches, allFriends, layerNum + 1);
         if(newMatches && newMatches.length === 0){
             chainList.push(matches);
         }
