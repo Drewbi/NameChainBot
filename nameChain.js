@@ -19,7 +19,7 @@ function parseFriends(data) {
     for(var i in friendData){
         const friend = { 
             first: friendData[i].name.split(" ")[0],
-            last: friendData[i].name.split(" ")[1]
+            last: friendData[i].name.split(" ")[friendData[i].name.split(" ").length -1]
         };
         friendArray[i] = friend;
     }
@@ -33,7 +33,10 @@ function matchName(friend, matches, allFriends, layerNum) {
     // console.log("Matches: ", matches)
     var result = allFriends.filter(candidate => {
         return candidate.first === friend.last && candidate !== friend && !matches.includes(candidate);
-    })
+    });
+    if(result.length >= 1){
+        console.log(" - ".repeat(layerNum) + "Testing: ", friend.first, friend.last);
+    }
     var chainList = [];
     if(result.length === 0){
         let baseMatch = {
@@ -49,6 +52,6 @@ function matchName(friend, matches, allFriends, layerNum) {
     return chainList;
 }
 
-function parseList(nameList) {
-
+function parseList(matchList){
+    console.log("Parsing");
 }
