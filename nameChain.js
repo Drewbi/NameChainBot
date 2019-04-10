@@ -27,10 +27,8 @@ function parseFriends(data) {
 }
 
 function matchName(friend, matches, allFriends, layerNum) {
-    // console.log(" - ".repeat(layerNum) + "Testing: ", friend.first, friend.last);
+    console.log(" - ".repeat(layerNum) + "Added: ", friend.first, friend.last);
     matches.push(friend);
-    // console.log("Added:", friend);
-    // console.log("Matches: ", matches)
     var result = allFriends.filter(candidate => {
         return candidate.first === friend.last && candidate !== friend && !matches.includes(candidate);
     });
