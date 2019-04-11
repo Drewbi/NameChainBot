@@ -4,11 +4,11 @@ const util = require('util')
 fs.readFile('./Data/test.json', 'utf-8', (err, data) => {
     if (err) throw err;
     const friends = parseFriends(data);
-    for(var i in friends) {
-        console.log("Started:", friends[i].first, friends[i].last);
-        var matches = [];
-        var results = matchName(friends[i], matches, friends, 0);
-        console.log(util.inspect(results, false, null, true /* enable colors */))
+    for(const friend of friends) {
+        console.log("Started:", friend.first, friend.last);
+        let matches = [];
+        var results = matchName(friend, matches, friends, 1);
+        console.log("end:", util.inspect(results, false, null, true /* enable colors */))
     }
 });
 
@@ -27,29 +27,24 @@ function parseFriends(data) {
 }
 
 function matchName(friend, matches, allFriends, layerNum) {
-    console.log(" - ".repeat(layerNum) + "Added: ", friend.first, friend.last);
     matches.push(friend);
-    var result = allFriends.filter(candidate => {
+    const results = allFriends.filter(candidate => {
         return candidate.first === friend.last && candidate !== friend && !matches.includes(candidate);
     });
-    if(result.length >= 1){
-        console.log(" - ".repeat(layerNum) + "Testing: ", friend.first, friend.last);
-    }
     var chainList = [];
-    if(result.length === 0){
+    if(results.length === 0) {
         let baseMatch = {
             chain: matches,
             depth: layerNum
         }
         chainList.push(baseMatch);
-    }
-    for (var i in result) {
-        var addition = matchName(result[i], matches, allFriends, layerNum + 1);
-        chainList.push(addition);
+    } else { 
+        for (const result of results) {
+            let additions = matchName(result, matches, allFriends, layerNum + 1);
+            for (const addition of additions) {
+                chainList.push(addition);
+            }
+        }
     }
     return chainList;
-}
-
-function parseList(matchList){
-    console.log("Parsing");
 }
