@@ -1,7 +1,7 @@
 const fs = require('fs');
 const util = require('util')
 
-fs.readFile('./Data/test.json', 'utf-8', (err, data) => {
+fs.readFile('./Data/myfriends.json', 'utf-8', (err, data) => {
     if (err) throw err;
     const friends = parseFriends(data);
     for(const friend of friends) {
@@ -27,20 +27,21 @@ function parseFriends(data) {
 }
 
 function matchName(friend, matches, allFriends, layerNum) {
-    matches.push(friend);
+    var newMatches = [...matches];
+    newMatches.push(friend);
     const results = allFriends.filter(candidate => {
-        return candidate.first === friend.last && candidate !== friend && !matches.includes(candidate);
+        return candidate.first === friend.last && candidate !== friend && !newMatches.includes(candidate);
     });
     var chainList = [];
     if(results.length === 0) {
         let baseMatch = {
-            chain: matches,
+            chain: newMatches,
             depth: layerNum
         }
         chainList.push(baseMatch);
     } else { 
         for (const result of results) {
-            let additions = matchName(result, matches, allFriends, layerNum + 1);
+            let additions = matchName(result, newMatches, allFriends, layerNum + 1);
             for (const addition of additions) {
                 chainList.push(addition);
             }
