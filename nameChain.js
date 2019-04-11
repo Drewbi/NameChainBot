@@ -1,14 +1,18 @@
 const fs = require('fs');
 const util = require('util')
 
-fs.readFile('./Data/myfriends.json', 'utf-8', (err, data) => {
+fs.readFile('./realData/friend1k.json', 'utf-8', (err, data) => {
     if (err) throw err;
     const friends = parseFriends(data);
     for(const friend of friends) {
-        console.log("Started:", friend.first, friend.last);
         let matches = [];
         var results = matchName(friend, matches, friends, 1);
-        console.log("end:", util.inspect(results, false, null, true /* enable colors */))
+        for(const result of results){
+            if(result.depth > 1){
+                console.log(util.inspect(result, false, null, true /* enable colors */))
+                console.log("------------------------------------------------------");
+            }
+        }
     }
 });
 
@@ -23,6 +27,7 @@ function parseFriends(data) {
         };
         friendArray[i] = friend;
     }
+    console.log("Parsed", friendArray.length,"friends.");
     return friendArray;
 }
 
